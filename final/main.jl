@@ -14,7 +14,7 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "3-coop-adv1"
+game_type = "3-coop-adv2"
 player_dynamics = [SLOW_PLAYER, SLOW_PLAYER, FAST_PLAYER]
 initial_state_config = "random" # "random" or "static"
 strategies = ["lifted", "lifted", "lifted"]
@@ -28,6 +28,10 @@ include("solver/lifted-solver.jl");
 include("strategies/game/receding-horizon.jl")
 include("simulation/simulation.jl");
 include("simulation/animation.jl");
+
+
+# message
+println("Dependencies Loaded\nStarting Program...")
 
 # get game
 game = form_game(game_type, player_dynamics)

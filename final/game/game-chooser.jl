@@ -12,6 +12,8 @@ function form_game(game_type::String, player_bounds::Any)
   elseif startswith(game_type, "3-coop")
     if endswith(game_type, "adv1")
       game = three_player_coop_adv1(player_bounds=player_bounds)
+    elseif endswith(game_type, "adv2")
+      game = three_player_coop_adv2(player_bounds=player_bounds)
     else
       game = three_player_coop_basic(player_bounds=player_bounds)
     end

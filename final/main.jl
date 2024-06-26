@@ -14,17 +14,17 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "2-tag"
-player_dynamics = [FAST_PLAYER, FAST_PLAYER]
-initial_state_config = "random" # "random"
-strategies = ["lifted", "lifted"]
-animation_labels = ["pursuer", "evader"]
-animation_colors = [colorant"red", colorant"blue"]
+game_type = "3-coop"
+player_dynamics = [SLOW_PLAYER, SLOW_PLAYER, FAST_PLAYER]
+initial_state_config = "random" # "random" or "static"
+strategies = ["lifted", "lifted", "lifted"]
+animation_labels = ["pursuer", "pursuer", "evader"]
+animation_colors = [colorant"red", colorant"red", colorant"blue"]
 
 # imports 
 include("game/game-chooser.jl")
 include("utils/main-util.jl")
-include("solver/lifted-solver.jl"); 
+include("solver/lifted-solver.jl");
 include("strategies/game/receding-horizon.jl")
 include("simulation/simulation.jl");
 include("simulation/animation.jl");
@@ -60,8 +60,8 @@ animate_sim_steps(
   filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX),
   show_costs=SHOW_COSTS,
   show_legend=true,
-  player_colors = animation_colors,
-  player_names = animation_labels,
+  player_colors=animation_colors,
+  player_names=animation_labels,
 )
 
 

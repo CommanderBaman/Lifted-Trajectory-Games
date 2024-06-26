@@ -13,3 +13,20 @@ function get_initial_state(num_players::Int, initial_state_option::String="")
   end
   initial_state
 end
+
+
+
+function get_video_name(game_type::String, prefix = "", suffix = "")
+  result = ""
+  if prefix != ""
+    result *= prefix * "-"
+  end
+
+  result *= game_type
+
+  if suffix != ""
+    result *= "-" * suffix
+  end
+
+  result
+end

@@ -57,7 +57,7 @@ animate_sim_steps(
   live=false,
   framerate=ANIMATION_FRAME_RATE,
   show_turn=true,
-  filename=ANIMATION_FILE_NAME_PREFIX,
+  filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX),
   show_costs=SHOW_COSTS,
   show_legend=true,
   player_colors = animation_colors,

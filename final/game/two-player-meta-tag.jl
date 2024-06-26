@@ -7,10 +7,6 @@ function two_player_meta_tag(;
   environment_radius=4,
   coupling_constraints=nothing,
   control_penalty=0.1,
-  # dynamics=planar_double_integrator(;
-  #     state_bounds=(; lb=[-Inf, -Inf, -5, -5], ub=[Inf, Inf, 5, 5]),
-  #     control_bounds=(; lb=[-10, -10], ub=[10, 10]),
-  # ),
   # array of [state_bounds, control_bounds] for each player
   player_bounds=[[5,10], [5,10]],
   distance_metric=norm,

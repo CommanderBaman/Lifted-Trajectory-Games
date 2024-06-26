@@ -5,7 +5,7 @@ using GLMakie
 
 # constant variables 
 FAST_PLAYER = [5, 10]
-SLOW_PLAYER = [2, 5]
+SLOW_PLAYER = [2.5, 5]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
 NUM_SIMULATION_STEPS = 600
@@ -14,7 +14,7 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "3-coop"
+game_type = "3-coop-adv1"
 player_dynamics = [SLOW_PLAYER, SLOW_PLAYER, FAST_PLAYER]
 initial_state_config = "random" # "random" or "static"
 strategies = ["lifted", "lifted", "lifted"]

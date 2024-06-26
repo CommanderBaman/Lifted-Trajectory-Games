@@ -193,7 +193,7 @@ end
 
 
 # get dynamics from bound 
-function get_dynamics_from_bound(state_bound::Int, control_bound::Int)
+function get_dynamics_from_bound(state_bound, control_bound)
   planar_double_integrator(;
     state_bounds=(; lb=[-Inf, -Inf, -state_bound, -state_bound], ub=[Inf, Inf, state_bound, state_bound]),
     control_bounds=(; lb=[-control_bound, -control_bound], ub=[control_bound, control_bound]),

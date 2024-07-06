@@ -17,9 +17,9 @@ end
 # cost for a planning horizon
 function get_game_cost(game, x, u, reducer_function, planning_horizon=20, context_state=[])
   num_steps = length(x)
-  costs = map(1:(num_steps-planning_horizon+1)) do i
+  costs = map(1:(num_steps-planning_horizon)) do i
     xs = x[i:i+planning_horizon]
-    us = u[i:i+planning_horizon]
+    us = map(ui -> ui.reference_control, u[i:i+planning_horizon])
     reducer_function(game.cost(xs, us, context_state))
   end
   costs
@@ -63,7 +63,7 @@ end
 
 
 function save_cost_plot(
-  game_costs_array,
+  game_costs_array;
   fig=Makie.Figure(),
   ax_kwargs=(;),
   aspect=1,

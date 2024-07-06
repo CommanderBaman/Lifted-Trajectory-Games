@@ -428,7 +428,7 @@ parameter_dimension(optimizer::Optimizer) = parameter_dimension(optimizer.proble
 
 
 # main struct
-struct LiftedTrajectoryGameSolver{T1,T2,T3,T4,T5,T6,T7,T8,T9,T10}
+mutable struct LiftedTrajectoryGameSolver{T1,T2,T3,T4,T5,T6,T7,T8,T9,T10}
   "A collection of action generators, one for each player in the game."
   trajectory_reference_generators::T1
   "A collection of trajectory optimizers, one for each player in the game"

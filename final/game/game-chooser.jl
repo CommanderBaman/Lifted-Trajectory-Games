@@ -4,6 +4,7 @@
 # import all games  
 include("two-player-meta-tag.jl")
 include("three-coop.jl")
+include("n-herd.jl")
 
 # chooser function 
 function form_game(game_type::String, player_bounds::Any)
@@ -17,6 +18,10 @@ function form_game(game_type::String, player_bounds::Any)
     else
       game = three_player_coop_basic(player_bounds=player_bounds)
     end
+  elseif contains(game_type, "herd")
+    # guarantee number of players is same as the length of player bounds
+    @assert parse(Int, split(game_type, "-")[1]) == length(player_bounds)
+    game = n_herd_basic(player_bounds = player_bounds)
   else
     throw("Unimplemented Game Type")
   end

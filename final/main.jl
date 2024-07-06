@@ -6,6 +6,7 @@ using GLMakie
 # constant variables 
 FAST_PLAYER = [5, 10]
 SLOW_PLAYER = [2.5, 5]
+ULTRA_SLOW_PLAYER = [1, 2]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
 NUM_SIMULATION_STEPS = 600
@@ -14,12 +15,26 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "3-coop-adv2"
-player_dynamics = [SLOW_PLAYER, SLOW_PLAYER, FAST_PLAYER]
+game_type = "3-herd"
+player_dynamics = [FAST_PLAYER, ULTRA_SLOW_PLAYER, ULTRA_SLOW_PLAYER]
 initial_state_config = "random" # "random" or "static"
 strategies = ["lifted", "lifted", "lifted"]
-animation_labels = ["pursuer", "pursuer", "evader"]
-animation_colors = [colorant"red", colorant"red", colorant"blue"]
+animation_labels = ["pursuer", "evader", "evader"]
+animation_colors = [colorant"red", colorant"blue", colorant"blue"]
+
+
+# for safe herding
+if contains(game_type, "herd")
+  let 
+    num_players = parse(Int, split(game_type, "-")[1])
+    @assert num_players == length(player_dynamics) 
+    @assert num_players == length(strategies) 
+    @assert num_players == length(animation_labels) 
+    @assert num_players == length(animation_colors) 
+  end 
+end
+
+println("Arguments are safe\nLoading Dependencies...")
 
 # imports 
 include("game/game-chooser.jl")
@@ -54,6 +69,8 @@ simulation_steps = rollout(
   NUM_SIMULATION_STEPS;
   get_info=(strategy, x, t) -> strategy.player_strategies
 );
+
+println("Simulation done\nAnimating...")
 GLMakie.activate!()
 animate_sim_steps(
   game,
@@ -68,7 +85,6 @@ animate_sim_steps(
   player_names=animation_labels,
 )
 
-
-
-
-
+println("$(get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX)).mp4 saved")
+println("Program completed successfully!")
+println("Thank You!")

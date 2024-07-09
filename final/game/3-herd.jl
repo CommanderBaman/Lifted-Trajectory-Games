@@ -121,10 +121,9 @@ function herd3_adv1(;
       ce1 = distance_function(xe1_xp) 
       ce2 = distance_function(xe2_xp)
       
-      # adding a bonus for 
-      de1e2 = distance_function(xe1 - xe2)
-      ce1 -= herd_bonus * de1e2
-      ce2 -= herd_bonus * de1e2
+      # adding a bonus for collecting as a herd
+      ce1 -= herd_bonus * distance_function(xe1_evm)
+      ce2 -= herd_bonus * distance_function(xe2_evm)
 
       [cp, -ce1, -ce2]
     end

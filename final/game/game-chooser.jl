@@ -19,9 +19,17 @@ function form_game(game_type::String, player_bounds::Any)
     @assert number_of_players + 2 == length(player_bounds)
 
     if number_of_players == 3
-      game = herd_coop_3_basic(player_bounds=player_bounds)
+      if endswith(game_type, "adv1")
+        game = herd_coop_3_adv1(player_bounds=player_bounds)
+      else
+        game = herd_coop_3_basic(player_bounds=player_bounds)
+      end
     elseif number_of_players == 5
-      game = herd_coop_5_basic(player_bounds=player_bounds)
+      if endswith(game_type, "adv1")
+        game = herd_coop_5_adv1(player_bounds=player_bounds)
+      else
+        game = herd_coop_5_basic(player_bounds=player_bounds)
+      end
     else
       throw("Unimplemented Game Type")
     end
@@ -44,7 +52,11 @@ function form_game(game_type::String, player_bounds::Any)
         game = herd3_basic(player_bounds = player_bounds)
       end
     elseif number_of_players == 5
-      game = herd5_basic(player_bounds = player_bounds)
+      if endswith(game_type, "adv1")
+        game = herd5_adv1(player_bounds=player_bounds)
+      else
+        game = herd5_basic(player_bounds = player_bounds)
+      end
     else
       game = n_herd_basic(player_bounds = player_bounds)
     end

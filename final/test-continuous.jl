@@ -22,7 +22,9 @@ NUM_TRAINING_SIMULATION = 50
 NUM_TRAINING_SIMULATION_STEPS = 100
 
 COST_PLOT_PREFIX = "cost-plot"
-SHOW_COSTS = false
+SHOW_COSTS = true
+
+DO_ANIMATION = false
 
 # global variables
 game_type = "2-tag"
@@ -123,7 +125,15 @@ save_cost_plot(
   filename=get_video_name(game_type, COST_PLOT_PREFIX),
 )
 
-# TODO: print out mean of last 50 costs, and their std. 
+if SHOW_COSTS
+  mean_cost, mean_cost_stddev = get_plot_print_values(costs)
+  println("Costs: $mean_cost \\pm $mean_cost_stddev")
+end
+
+
+if DO_ANIMATION
+  # TODO: add animation
+end
 
 println("Plot saved at $(get_video_name(game_type, COST_PLOT_PREFIX)).png")
 

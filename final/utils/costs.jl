@@ -56,6 +56,21 @@ function get_plot_values(game_costs_array)
   upper_values, mean_values, lower_values
 end
 
+function get_plot_print_values(game_costs_array; length_to_check = 50, round_digits = 3)
+  while length_to_check >= length(game_costs_array[1])
+    length_to_check -= 10
+  end
+
+  upper_values, mean_values, lower_values = get_plot_values(game_costs_array)
+  stddevs = upper_values .- mean_values
+
+  # clipping
+  mean_values = mean_values[end-length_to_check:end]
+  stddevs = stddevs[end-length_to_check:end]
+  
+  round(mean(mean_values), digits=round_digits), round(mean(stddevs), digits=round_digits)
+end
+
 
 function Makie.convert_arguments(::Type{Plot{Makie.band}}, x::UnitRange{Int64}, ylower::Vector{Any}, yupper::Vector{Any})
   return (Makie.Point2{Float64}.(x, ylower), Makie.Point2{Float64}.(x, yupper))

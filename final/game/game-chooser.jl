@@ -8,6 +8,7 @@ include("n-herd.jl")
 include("5-herd.jl")
 include("3-herd.jl")
 include("3-coop-herd.jl")
+include("5-coop-herd.jl")
 
 # chooser function 
 function form_game(game_type::String, player_bounds::Any)
@@ -19,6 +20,8 @@ function form_game(game_type::String, player_bounds::Any)
 
     if number_of_players == 3
       game = herd_coop_3_basic(player_bounds=player_bounds)
+    elseif number_of_players == 5
+      game = herd_coop_5_basic(player_bounds=player_bounds)
     else
       throw("Unimplemented Game Type")
     end

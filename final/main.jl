@@ -18,12 +18,12 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "3-herd-adv1"
-player_dynamics = [FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
+game_type = "5-coop-herd"
+player_dynamics = [FAST_PLAYER, FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
 initial_state_config = "random" # "random" or "static"
-strategies = ["lifted", "lifted", "lifted"]
-animation_labels = ["pursuer", "evader", "evader"]
-animation_colors = [colorant"red", colorant"blue", colorant"blue"]
+strategies = ["lifted", "lifted", "lifted", "lifted", "lifted", "lifted", "lifted"]
+animation_labels = ["pursuer", "pursuer", "evader", "evader", "evader", "evader", "evader"]
+animation_colors = [colorant"red", colorant"red", colorant"blue", colorant"blue", colorant"blue", colorant"blue", colorant"blue"]
 
 println("Checking Arguments...")
 

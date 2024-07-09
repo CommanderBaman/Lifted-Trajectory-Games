@@ -18,14 +18,16 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "2-tag"
-player_dynamics = [FAST_PLAYER, FAST_PLAYER]
+game_type = "3-herd-adv1"
+player_dynamics = [FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
 initial_state_config = "random" # "random" or "static"
-strategies = ["lifted", "random-2"]
-animation_labels = ["pursuer", "evader"]
-animation_colors = [colorant"red", colorant"blue"]
+strategies = ["lifted", "lifted", "lifted"]
+animation_labels = ["pursuer", "evader", "evader"]
+animation_colors = [colorant"red", colorant"blue", colorant"blue"]
 
 println("Checking Arguments...")
+
+@assert length(player_dynamics) == length(strategies)
 
 # for safe herding
 if contains(game_type, "herd")

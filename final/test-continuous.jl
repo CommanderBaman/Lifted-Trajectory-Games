@@ -14,10 +14,13 @@ ULTRA_SLOW_PLAYER = [1, 2]
 CHOSEN_PLAYER = [1, 2]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
-NUM_SIMULATION_STEPS = 500
+
 NUM_SIMULATIONS = 50
+NUM_SIMULATION_STEPS = 500
+
 NUM_TRAINING_SIMULATION = 50
 NUM_TRAINING_SIMULATION_STEPS = 100
+
 COST_PLOT_PREFIX = "cost-plot"
 SHOW_COSTS = false
 
@@ -119,6 +122,8 @@ save_cost_plot(
   heading="Cost Plot",
   filename=get_video_name(game_type, COST_PLOT_PREFIX),
 )
+
+# TODO: print out mean of last 50 costs, and their std. 
 
 println("Plot saved at $(get_video_name(game_type, COST_PLOT_PREFIX)).png")
 

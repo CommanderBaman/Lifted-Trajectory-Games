@@ -95,7 +95,7 @@ function save_cost_plot(
 
 
   xlims = (1, number_of_steps)
-  ylims = (-1, ceil(max(upper_values...) * 1.1))
+  ylims = (0, ceil(max(upper_values...) * 1.1))
   title = "$heading"
   ax = Makie.Axis(
     fig[1, 1];

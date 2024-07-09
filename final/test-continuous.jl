@@ -15,16 +15,21 @@ CHOSEN_PLAYER = [1, 2]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
 
-NUM_SIMULATIONS = 50
-NUM_SIMULATION_STEPS = 500
-
 NUM_TRAINING_SIMULATION = 50
 NUM_TRAINING_SIMULATION_STEPS = 100
 
-COST_PLOT_PREFIX = "cost-plot"
-SHOW_COSTS = true
+NUM_SIMULATIONS = 50
+NUM_SIMULATION_STEPS = 200
 
-DO_ANIMATION = false
+COST_PLOT_PREFIX = "cost-plot"
+PRINT_COSTS = true
+
+DO_ANIMATION = true
+ANIMATION_FRAME_RATE = 60
+ANIMATION_FILE_NAME_PREFIX = "game-video"
+SHOW_COSTS = false
+animation_labels = ["pursuer", "evader"]
+animation_colors = [colorant"red", colorant"blue"]
 
 # global variables
 game_type = "2-tag"
@@ -41,8 +46,10 @@ if contains(game_type, "herd")
     num_players = parse(Int, split(game_type, "-")[1])
     @assert num_players == length(player_dynamics)
     @assert num_players == length(strategies)
-    @assert num_players == length(animation_labels)
-    @assert num_players == length(animation_colors)
+    if DO_ANIMATION
+      @assert num_players == length(animation_labels)
+      @assert num_players == length(animation_colors) 
+    end
   end
 end
 
@@ -113,6 +120,23 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
     cost_for_this = get_game_cost(game, states, inputs, reducer, PLANNING_HORIZON)
 
     push!(costs, cost_for_this)
+
+    if DO_ANIMATION & (i == NUM_SIMULATIONS)
+      GLMakie.activate!()
+      animate_sim_steps(
+        game,
+        simulation_steps;
+        live=false,
+        framerate=ANIMATION_FRAME_RATE,
+        show_turn=true,
+        filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX),
+        show_costs=SHOW_COSTS,
+        show_legend=true,
+        player_colors=animation_colors,
+        player_names=animation_labels,
+      )
+    end
+
   end
 end
 
@@ -125,18 +149,12 @@ save_cost_plot(
   filename=get_video_name(game_type, COST_PLOT_PREFIX),
 )
 
-if SHOW_COSTS
+if PRINT_COSTS
   mean_cost, mean_cost_stddev = get_plot_print_values(costs)
   println("Costs: $mean_cost \\pm $mean_cost_stddev")
 end
 
-
-if DO_ANIMATION
-  # TODO: add animation
-end
-
 println("Plot saved at $(get_video_name(game_type, COST_PLOT_PREFIX)).png")
-
 
 
 println("Program completed successfully!")

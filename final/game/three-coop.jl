@@ -132,8 +132,8 @@ function three_player_coop_adv2(;
       # to promote distance between them for diverse area coverage
       # more distance between them => more area covered 
       # thinking of using 1/d12, so that higher distances are not supported
-      c1 -= 1/(d12 + 0.1)
-      c2 -= 1/(d12 + 0.1)
+      c1 -= 1/(d12 + 0.00001)
+      c2 -= 1/(d12 + 0.00001)
 
       [c1, c2, c3]
     end

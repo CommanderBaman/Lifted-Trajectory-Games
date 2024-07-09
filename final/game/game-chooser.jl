@@ -6,6 +6,7 @@ include("two-player-meta-tag.jl")
 include("three-coop.jl")
 include("n-herd.jl")
 include("5-herd.jl")
+include("3-herd.jl")
 
 # chooser function 
 function form_game(game_type::String, player_bounds::Any)
@@ -23,7 +24,9 @@ function form_game(game_type::String, player_bounds::Any)
     # guarantee number of players is same as the length of player bounds
     number_of_players = parse(Int, split(game_type, "-")[1])
     @assert number_of_players == length(player_bounds)
-    if number_of_players == 5
+    if number_of_players == 3
+      game = herd3_basic(player_bounds = player_bounds)
+    elseif number_of_players == 5
       game = herd5_basic(player_bounds = player_bounds)
     else
       game = n_herd_basic(player_bounds = player_bounds)

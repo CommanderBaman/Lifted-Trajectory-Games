@@ -49,3 +49,17 @@ strategies = ["lifted", "lifted", "lifted"]
 animation_labels = ["pursuer", "pursuer", "evader"]
 animation_colors = [colorant"red", colorant"red", colorant"blue"]
 ```
+
+
+
+## Cooperative Herding
+
+```julia
+# global variables
+game_type = "5-coop-herd"
+player_dynamics = [FAST_PLAYER, FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
+initial_state_config = "random" # "random" or "static"
+strategies = ["lifted", "lifted", "lifted", "lifted", "lifted", "lifted", "lifted"]
+animation_labels = ["pursuer", "pursuer", "evader", "evader", "evader", "evader", "evader"]
+animation_colors = [colorant"red", colorant"red", colorant"blue", colorant"blue", colorant"blue", colorant"blue", colorant"blue"]
+```

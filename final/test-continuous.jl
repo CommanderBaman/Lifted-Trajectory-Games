@@ -15,11 +15,11 @@ CHOSEN_PLAYER = [2, 4]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
 
-NUM_TRAINING_SIMULATION = 50
-NUM_TRAINING_SIMULATION_STEPS = 200
+NUM_TRAINING_SIMULATION = 5
+NUM_TRAINING_SIMULATION_STEPS = 20
 
-NUM_SIMULATIONS = 50
-NUM_SIMULATION_STEPS = 500
+NUM_SIMULATIONS = 5
+NUM_SIMULATION_STEPS = 50
 
 COST_PLOT_PREFIX = "cost-plot"
 PRINT_COSTS = true
@@ -36,6 +36,8 @@ game_type = "3-herd-adv1"
 player_dynamics = [FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
 initial_state_config = "random" # "random" or "static"
 strategies = ["lifted", "lifted", "lifted"]
+strategy_config = "open-loop" # open-loop or receding-horizon
+STRATEGY_TURN_LENGTH = 5
 
 # checking if arguments are safe or not
 @assert length(strategies) == length(player_dynamics)
@@ -61,7 +63,7 @@ include("utils/costs.jl")
 include("utils/reducers.jl")
 include("utils/main-util.jl")
 include("solver/lifted-solver.jl");
-include("strategies/game/receding-horizon.jl")
+include("strategies/game/game-strategy-chooser.jl")
 include("simulation/simulation.jl");
 include("simulation/animation.jl");
 
@@ -80,7 +82,8 @@ for i in ProgressBar(1:NUM_TRAINING_SIMULATION)
   # get initial state
   initial_state = get_initial_state(num_players(game), initial_state_config)
   # get game strategy
-  receding_horizon_strategy = RecedingHorizonStrategy(; lifted_solver, game, turn_length=5, player_strategy_options=strategies)
+  strategy = form_strategy(strategy_config)
+  receding_horizon_strategy = strategy(; lifted_solver, game, turn_length=STRATEGY_TURN_LENGTH, player_strategy_options=strategies)
 
   @suppress begin
     # simulate
@@ -103,7 +106,8 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
   # get initial state
   initial_state = get_initial_state(num_players(game), initial_state_config)
   # get game strategy
-  receding_horizon_strategy = RecedingHorizonStrategy(; lifted_solver, game, turn_length=5, player_strategy_options=strategies)
+  strategy = form_strategy(strategy_config)
+  receding_horizon_strategy = strategy(; lifted_solver, game, turn_length=STRATEGY_TURN_LENGTH, player_strategy_options=strategies)
 
   @suppress begin
     # simulate
@@ -129,7 +133,7 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
         live=false,
         framerate=ANIMATION_FRAME_RATE,
         show_turn=true,
-        filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX),
+        filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX, "$strategy_config-$STRATEGY_TURN_LENGTH"),
         show_costs=SHOW_COSTS,
         show_legend=true,
         player_colors=animation_colors,
@@ -141,12 +145,12 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
 end
 
 println("Simulation done\nForming Plot...")
-
+photo_name = get_video_name(game_type, COST_PLOT_PREFIX, "$strategy_config-$STRATEGY_TURN_LENGTH")
 # capturing in a plot
 save_cost_plot(
   costs;
   heading="Cost Plot",
-  filename=get_video_name(game_type, COST_PLOT_PREFIX),
+  filename=photo_name,
 )
 
 if PRINT_COSTS
@@ -154,7 +158,7 @@ if PRINT_COSTS
   println("Costs: $mean_cost \\pm $mean_cost_stddev")
 end
 
-println("Plot saved at $(get_video_name(game_type, COST_PLOT_PREFIX)).png")
+println("Plot saved at $photo_name.png")
 
 
 println("Program completed successfully!")

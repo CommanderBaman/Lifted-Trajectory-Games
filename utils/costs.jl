@@ -103,13 +103,13 @@ function save_cost_plot(
     aspect,
     limits=(xlims, ylims),
     xlabel="Steps",
-    ylabel="Cost",
+    ylabel="Game Value",
     xlabelpadding=0,
     ylabelpadding=-5,
     ax_kwargs...,
   )
   Makie.lines!(xs, mean_values)
-  Makie.band!(xs, lower_values, upper_values)
+  Makie.band!(xs, lower_values, upper_values, color=(:blue, 0.5))
 
   Makie.save("$filename.png", fig)
 end

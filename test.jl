@@ -9,35 +9,43 @@ using Suppressor
 
 # constant variables 
 FAST_PLAYER = [5, 10]
-SLOW_PLAYER = [2.5, 5]
+SLOW_PLAYER = [2, 4]
 ULTRA_SLOW_PLAYER = [1, 2]
 CHOSEN_PLAYER = [2, 4]
 DEFAULT_NUM_ACTIONS = 2
 PLANNING_HORIZON = 20
 
-NUM_TRAINING_SIMULATION = 5
-NUM_TRAINING_SIMULATION_STEPS = 20
+NUM_TRAINING_SIMULATION = 100
+NUM_TRAINING_SIMULATION_STEPS = 100
 
-NUM_SIMULATIONS = 5
-NUM_SIMULATION_STEPS = 50
+NUM_SIMULATIONS = 50
+NUM_SIMULATION_STEPS = 200
 
 COST_PLOT_PREFIX = "cost-plot"
 PRINT_COSTS = true
 
-DO_ANIMATION = false
-ANIMATION_FRAME_RATE = 60
+DO_ANIMATION = true
+ANIMATION_FRAME_RATE = 5
 ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
+
+# global variables
+game_type = "2-tag"
+player_dynamics = [FAST_PLAYER, FAST_PLAYER]
+initial_state_config = "random" # "random" or "static"
+strategies = ["lifted", "random-1"] # "random-1" or "lifted"
+strategy_config = "receding-horizon" # open-loop or receding-horizon
+STRATEGY_TURN_LENGTH = 3
 animation_labels = ["pursuer", "evader"]
 animation_colors = [colorant"red", colorant"blue"]
 
-# global variables
-game_type = "3-herd-adv1"
-player_dynamics = [FAST_PLAYER, CHOSEN_PLAYER, CHOSEN_PLAYER]
-initial_state_config = "random" # "random" or "static"
-strategies = ["lifted", "lifted", "lifted"]
-strategy_config = "open-loop" # open-loop or receding-horizon
-STRATEGY_TURN_LENGTH = 5
+# decide suffix 
+is_random = any([contains(x, "random") for x in strategies])
+if is_random
+  FILE_SUFFIX = "$strategy_config-$STRATEGY_TURN_LENGTH-random"
+else
+  FILE_SUFFIX = "$strategy_config-$STRATEGY_TURN_LENGTH-lifted"
+end
 
 # checking if arguments are safe or not
 @assert length(strategies) == length(player_dynamics)
@@ -50,7 +58,7 @@ if contains(game_type, "herd")
     @assert num_players == length(strategies)
     if DO_ANIMATION
       @assert num_players == length(animation_labels)
-      @assert num_players == length(animation_colors) 
+      @assert num_players == length(animation_colors)
     end
   end
 end
@@ -100,6 +108,7 @@ println("Training done")
 
 # disabling learning
 lifted_solver.enable_learning = [false for _ in 1:num_players(game)]
+timers = []
 
 println("Simulating $NUM_SIMULATIONS times...")
 for i in ProgressBar(1:NUM_SIMULATIONS)
@@ -109,7 +118,9 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
   strategy = form_strategy(strategy_config)
   receding_horizon_strategy = strategy(; lifted_solver, game, turn_length=STRATEGY_TURN_LENGTH, player_strategy_options=strategies)
 
+  
   @suppress begin
+    start_time = time_ns()
     # simulate
     simulation_steps = rollout(
       game.dynamics,
@@ -125,6 +136,10 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
 
     push!(costs, cost_for_this)
 
+    end_time = time_ns()
+    # convert to ms
+    push!(timers, (end_time - start_time) / 1000000)
+
     if DO_ANIMATION & (i == NUM_SIMULATIONS)
       GLMakie.activate!()
       animate_sim_steps(
@@ -133,28 +148,34 @@ for i in ProgressBar(1:NUM_SIMULATIONS)
         live=false,
         framerate=ANIMATION_FRAME_RATE,
         show_turn=true,
-        filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX, "$strategy_config-$STRATEGY_TURN_LENGTH"),
+        filename=get_video_name(game_type, ANIMATION_FILE_NAME_PREFIX, FILE_SUFFIX),
         show_costs=SHOW_COSTS,
         show_legend=true,
         player_colors=animation_colors,
         player_names=animation_labels,
+        heading=""
       )
     end
-
   end
 end
 
 println("Simulation done\nForming Plot...")
-photo_name = get_video_name(game_type, COST_PLOT_PREFIX, "$strategy_config-$STRATEGY_TURN_LENGTH")
+photo_name = get_video_name(game_type, COST_PLOT_PREFIX, FILE_SUFFIX)
 # capturing in a plot
 save_cost_plot(
   costs;
-  heading="Cost Plot",
+  heading="",
   filename=photo_name,
 )
 
 if PRINT_COSTS
   mean_cost, mean_cost_stddev = get_plot_print_values(costs)
+  avg_time = sum(timers) / length(timers)
+  avg_time_per_step = round(avg_time / NUM_SIMULATION_STEPS; digits=3)
+  println("Random: $is_random")
+  println("Strategy: $strategy_config")
+  println("Cost Type: $game_type")
+  println("Avg Time: $avg_time_per_step ms")
   println("Costs: $mean_cost \\pm $mean_cost_stddev")
 end
 

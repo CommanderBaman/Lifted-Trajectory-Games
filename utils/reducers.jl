@@ -7,13 +7,18 @@ end
 
 # value of evader 
 function three_coop_reducer(cost)
-  -1 * cost[3]
+  abs(cost[3])
 end
 
 
 # game value of pursuer
 function herd_reducer(cost)
   cost[1]
+end
+
+# game value of pursuer
+function coop_herd_reducer(cost)
+  (cost[1] + cost[2]) / 2
 end
 
 
@@ -23,6 +28,8 @@ function form_reducer(game_type::String)
     reducer = two_tag_reducer
   elseif startswith(game_type, "3-coop")
     reducer = three_coop_reducer
+  elseif contains(game_type, "coop-herd")
+    reducer = coop_herd_reducer
   elseif contains(game_type, "herd")
     reducer = herd_reducer
   else

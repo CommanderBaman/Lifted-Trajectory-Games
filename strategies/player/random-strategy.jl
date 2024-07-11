@@ -26,7 +26,7 @@ end
 function check_player_within_bounds(strategy::RandomStrategy, state)
   environment_constraints = get_constraints(strategy.game.env, strategy.player_i)
   values = environment_constraints(state)
-  all(values .> 0)
+  all(values .> 1)
 end
 
 

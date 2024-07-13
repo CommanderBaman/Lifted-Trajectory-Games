@@ -77,9 +77,9 @@ function herd3_adv1(;
   # array of [state_bounds, control_bounds] for each player
   player_bounds=[[5, 10], [1, 2], [1, 2]],
   distance_metric=norm,
-  herd_center_weight = 0.2, 
-  herd_distribution_weight = 0.8,
-  herd_bonus=0.3
+  herd_center_weight = 0.1, 
+  herd_distribution_weight = 1.8,
+  herd_bonus=2
 )
   cost = let
     function distance_function(v)

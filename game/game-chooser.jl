@@ -46,13 +46,13 @@ function form_game(game_type::String, player_bounds::Any)
     number_of_players = parse(Int, split(game_type, "-")[1])
     @assert number_of_players == length(player_bounds)
     if number_of_players == 3
-      if endswith(game_type, "adv1")
+      if endswith(game_type, "adv")
         game = herd3_adv1(player_bounds=player_bounds)
       else
         game = herd3_basic(player_bounds = player_bounds)
       end
     elseif number_of_players == 5
-      if endswith(game_type, "adv1")
+      if endswith(game_type, "adv")
         game = herd5_adv1(player_bounds=player_bounds)
       else
         game = herd5_basic(player_bounds = player_bounds)

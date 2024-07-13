@@ -30,14 +30,16 @@ ANIMATION_FILE_NAME_PREFIX = "game-video"
 SHOW_COSTS = false
 
 # global variables
-game_type = "2-tag"
-player_dynamics = [FAST_PLAYER, FAST_PLAYER]
-initial_state_config = "random" # "random" or "static"
-strategies = ["lifted", "random-1"] # "random-1" or "lifted"
+game_type = "3-herd-adv"
 strategy_config = "receding-horizon" # open-loop or receding-horizon
-STRATEGY_TURN_LENGTH = 3
-animation_labels = ["pursuer", "evader"]
-animation_colors = [colorant"red", colorant"blue"]
+STRATEGY_TURN_LENGTH = 5
+strategies = ["lifted", "lifted", "lifted"] # "random-1" or "lifted"
+player_dynamics = [FAST_PLAYER, SLOW_PLAYER, SLOW_PLAYER]
+initial_state_config = "random" # "random" or "static"
+animation_labels = ["pursuer", "evader", "evader"]
+animation_colors = [colorant"red", colorant"blue", colorant"blue"]
+
+println("$game_type, $strategy_config-$STRATEGY_TURN_LENGTH")
 
 # decide suffix 
 is_random = any([contains(x, "random") for x in strategies])
